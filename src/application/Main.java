@@ -122,63 +122,98 @@ public class Main extends Application {
 			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 1,
 					1, 1, 1, 1, 1, 1 } };
 
-	static Button DFS_button = new Button("DFS");
-	static Button BFS_button = new Button("BFS");
-	static Button Astar_button = new Button("A*");
-	static Button increase_AnimationTime_button = new Button("+");
-	static Button deacrease_AnimationTime_button = new Button("-");
+	static Button DFS_button;
+	static Button BFS_button;
+	static Button Astar_button;
+	static Button increase_AnimationTime_button;
+	static Button deacrease_AnimationTime_button;
 	static Text Speed_Text;
-	static Node root = null;
-	static Node goal = null;
+	static Node root;
+	static Node goal;
 	static Set<Node> explored;
-	static int row = maze.length;
-	static int col = maze[0].length;
-	static int mazeScale = 1280 / ((row + col) / 2);
-	static Pane pane = new Pane();
-	static Rectangle[][] rect = new Rectangle[row][col];
-	static boolean mazeClean = true;
-	static int dealyAnimation = 100;
-	static int Animation_speed = 500;
+	static int row;
+	static int col;
+	static int mazeScale;
+	static Pane pane;
+	static Rectangle[][] rect;
+	static boolean mazeClean ;
+	static int dealyAnimation;
+	static int Animation_speed;
 	
 	static Timeline timeline= new Timeline();;
 
 	@Override
 	public void start(Stage primaryStage) {
+		
+        try {
+            String filename = "closedmaze.png";
 
+			File image = new File("mazes/" + filename);
+			BufferedImage mazeimg = ImageIO.read(image);
+			System.out.println("Successfully read maze!");
+			int[][] mazearr = Maze2DArr(mazeimg);
+			printMazearr(mazearr);
+			maze = mazearr;
+			
+			for (int i = 0; i < maze[0].length; i++) {
+				if (maze[0][i] == 2) {
+					root = new Node(0, i);
+					break;
+				}
+			}
+
+			for (int i = 0; i < maze[0].length; i++) {
+				if (maze[maze.length - 1][i] == 3) {
+					goal = new Node(maze.length, i);
+					break;
+				}
+			}
+			
+			int[][] mazeCopy = Arrays.stream(maze).map(int[]::clone).toArray(int[][]::new);
+
+			mazeCopy[root.y][root.x] = 1;
+			setTree(root, mazeCopy);
+           
+        }
+        catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+		
+		row = maze.length;
+		col = maze[0].length;
+		mazeScale = 1280 / ((row + col) / 2);
+		dealyAnimation = 100;
+		Animation_speed = 10;
+		mazeClean = true;
+		
+		pane = new Pane();
+		DFS_button = new Button("DFS");
+		BFS_button = new Button("BFS");
+		Astar_button = new Button("A*");
+		increase_AnimationTime_button = new Button("+");
+		deacrease_AnimationTime_button = new Button("-");
+		
+		rect = new Rectangle[row][col];
 		for (int r = 0; r < maze.length; r++) {
 			for (int c = 0; c < maze[0].length; c++) {
-				// System.out.println("rect["+r+"]["+c+"]");
-				if (maze[r][c] == 0) {
-					rect[r][c] = new Rectangle(c * (mazeScale / 2), r * (mazeScale / 2), (mazeScale / 2),
-							(mazeScale / 2));
-					rect[r][c].setFill(Color.WHITE);
-					pane.getChildren().add(rect[r][c]);
-
+				rect[r][c] = new Rectangle(c * (mazeScale / 2), r * (mazeScale / 2), (mazeScale / 2), (mazeScale / 2));			
+				switch(maze[r][c]) {
+				  case 0:
+					  rect[r][c].setFill(Color.WHITE);
+				    break;
+				  case 1:
+					  rect[r][c].setFill(Color.BLACK);
+					    break;
+				  case 2:
+					  rect[r][c].setFill(Color.RED);
+					    break;
+				  case 3:
+					    rect[r][c].setFill(Color.GREEN);
+					    break;
+				  default:
+				    // code block
 				}
-
-				if (maze[r][c] == 1) {
-					rect[r][c] = new Rectangle(c * (mazeScale / 2), r * (mazeScale / 2), (mazeScale / 2),
-							(mazeScale / 2));
-					pane.getChildren().add(rect[r][c]);
-
-				} else {
-					if (maze[r][c] == 2) {
-						rect[r][c] = new Rectangle(c * (mazeScale / 2), r * (mazeScale / 2), (mazeScale / 2),
-								(mazeScale / 2));
-						rect[r][c].setFill(Color.RED);
-						pane.getChildren().add(rect[r][c]);
-
-					}
-
-					if (maze[r][c] == 3) {
-						rect[r][c] = new Rectangle(c * (mazeScale / 2), r * (mazeScale / 2), (mazeScale / 2),
-								(mazeScale / 2));
-						rect[r][c].setFill(Color.GREEN);
-						goal = new Node(r, c);
-						pane.getChildren().add(rect[r][c]);
-					}
-
-				}
+				pane.getChildren().add(rect[r][c]);
 			}
 		}
 
@@ -319,7 +354,6 @@ public class Main extends Application {
         int width = mazefile.getWidth();
         int [][] maze2DArr = new int[height][width];
         
-        
         /* Fill the 2D array:
             0 - path
             1 - wall
@@ -334,21 +368,15 @@ public class Main extends Application {
             }
         }
 
-//        // get the starting point
-//        for (int x = 0; x < this.width; x++) {
-//            if (this.maze[0][x] == 0) {
-//                this.start = new Coordinates(x, 0);
-//                break;
-//            }
-//        }
-//
-//        // get the exit point
-//        for (int x = 0; x < this.width; x++) {
-//            if (this.maze[height - 1][x] == 0) {
-//                this.exit = new Coordinates(x, height - 1);
-//                break;
-//            }
-//        }
+        // set the starting point
+        for (int x = 0; x < width; x++) {
+            if (maze2DArr[0][x] == 0)
+            	maze2DArr[0][x] = 2;
+            
+            if (maze2DArr[height-1][x] == 0)
+            	maze2DArr[height-1][x] = 3;
+        }
+
         return maze2DArr;
     }
     
@@ -360,46 +388,12 @@ public class Main extends Application {
             	System.out.print(maze[y][x] + ((x!=maze[0].length-1)?", ":"}"));
             	
             }
-            System.out.print((y!=maze.length-1)?",\n":"\n}");
+            System.out.print((y!=maze.length-1)?",\n":"\n}\n");
         }
-        System.out.print("\n}");
     }
 	
 	
 	public static void main(String[] args) {
-		
-        try {
-            String filename = "closedmaze.png";
-
-			File image = new File("mazes/" + filename);
-			BufferedImage mazeimg = ImageIO.read(image);
-			System.out.println("Successfully read maze!");
-			int[][] mazearr = Maze2DArr(mazeimg);
-			printMazearr(mazearr);
-           
-        }
-        catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
-
-		for (int i = 0; i < maze[0].length; i++) {
-			if (maze[0][i] == 2) {
-				root = new Node(0, i);
-				break;
-			}
-		}
-
-		for (int i = 0; i < maze[0].length; i++) {
-			if (maze[maze.length - 1][i] == 3) {
-				goal = new Node(maze.length, i);
-				break;
-			}
-		}
-
-		int[][] mazeCopy = Arrays.stream(maze).map(int[]::clone).toArray(int[][]::new);
-
-		mazeCopy[root.y][root.x] = 1;
-		setTree(root, mazeCopy);
 
 		launch(args);
 
@@ -731,7 +725,8 @@ public class Main extends Application {
 		Iterator<Node> crunchifyIterator = path.iterator();
 		while (crunchifyIterator.hasNext()) {
 			Node tmp = crunchifyIterator.next();
-
+			
+			if(tmp.y < col && tmp.x < row) {
 			timeline.getKeyFrames().add(new KeyFrame(Duration.millis(dealyAnimation), evt -> {
 				// if (tmp.x < maze.length && tmp.y < maze[0].length)
 				{
@@ -743,7 +738,7 @@ public class Main extends Application {
 			);
 			timeline.play();
 			dealyAnimation += Animation_speed;
-
+			}
 		}
 	}
 
