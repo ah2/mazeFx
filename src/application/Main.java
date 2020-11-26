@@ -152,7 +152,7 @@ public class Main extends Application {
 			BufferedImage mazeimg = ImageIO.read(image);
 			System.out.println("Successfully read maze!");
 			int[][] mazearr = Maze2DArr(mazeimg);
-			printMazearr(mazearr);
+			//printMazearr(mazearr);
 			maze = mazearr;
 			
 			for (int i = 0; i < maze[0].length; i++) {
@@ -172,7 +172,10 @@ public class Main extends Application {
 			int[][] mazeCopy = Arrays.stream(maze).map(int[]::clone).toArray(int[][]::new);
 
 			mazeCopy[root.y][root.x] = 1;
+			//System.out.println("setting tree");
 			setTree(root, mazeCopy);
+			//System.out.println("tree");
+
            
         }
         catch (IOException e) {
@@ -292,7 +295,7 @@ public class Main extends Application {
             	timeline.getKeyFrames().clear();
             	cleanMaze();}
 				
-				BFSAstar(root, Arrays.stream(maze).map(int[]::clone).toArray(int[][]::new));
+				Astar(root, Arrays.stream(maze).map(int[]::clone).toArray(int[][]::new));
 				fillpath(getPath(goal));
             	timeline.playFromStart();
 				dealyAnimation = 100;
@@ -408,7 +411,7 @@ public class Main extends Application {
 		// return false;
 
 		// maze_copy2[root.y][root.x]=4;
-		System.out.println("DFS [x,y] =" + root.x + " ," + root.y);
+		//System.out.println("DFS [x,y] =" + root.x + " ," + root.y);
 
 		if (maze[root.y][root.x] == 3) {
 
@@ -489,7 +492,7 @@ public class Main extends Application {
 		return;
 	}
 
-	void BFSAstar(Node root, int[][] mazeCopy) {
+	void Astar(Node root, int[][] mazeCopy) {
 
 		PriorityQueue<Node> q = new PriorityQueue<Node>(20, new Comparator<Node>() {
 			// override compare method
@@ -536,108 +539,13 @@ public class Main extends Application {
 				dealyAnimation += Animation_speed;
 			}
 			
-			for (Edge e : u.adjacencies)
+			for (Edge e : u.adjacencies) {
+				//e.target.setParent(root);
 				q.add(e.target);
-//			if (u.left != null)
-//				q.add(u.left);
-//			if (u.down != null)
-//				q.add(u.down);
-//			if (u.up != null)
-//				q.add(u.up);
-//			if (u.right != null)
-//				q.add(u.right);
+				}
 		}
 
 		return;
-	}
-
-	public void AstarSearch(Node start) {
-
-		Set<Node> explored = new HashSet<Node>();
-		// setTree(start, maze);
-
-		PriorityQueue<Node> queue = new PriorityQueue<Node>(20, new Comparator<Node>() {
-			
-			// override compare method
-			public int compare(Node i, Node j) {
-				if (i.f_scores > j.f_scores) {
-					return 1;
-				}
-
-				else if (i.f_scores < j.f_scores) {
-					return -1;
-				}
-
-				else {
-					return 0;
-				}
-			}
-		});
-
-		// cost from start
-		start.g_scores = 0;
-
-		queue.add(start);
-
-		boolean found = false;
-
-		while ((!queue.isEmpty()) && (!found)) {
-
-			// the node in having the lowest f_score value
-			Node current = queue.poll();
-
-			explored.add(current);
-
-			// goal found
-			if (maze[current.x][current.y] == 3) {
-				found = true;
-				goal = current;
-			}
-
-			if (maze[current.y][current.x] != 2) {
-				timeline.getKeyFrames().add(new KeyFrame(Duration.millis(dealyAnimation), evt -> {
-					rect[current.y][current.x].setFill(Color.BLUE);
-					rect[current.y][current.x].setStroke(Color.WHITE);
-				})
-
-				);
-				timeline.play();
-				dealyAnimation += Animation_speed;
-			}
-
-			// check every child of current node
-			for (Edge e : current.adjacencies) {
-				Node child = e.target;
-				double cost = e.cost;
-				double temp_g_scores = current.g_scores + cost;
-				double temp_f_scores = temp_g_scores + child.h_scores;
-
-				/*
-				 * if child node has been evaluated and the newer f_score is higher, skip
-				 */
-
-				if ((explored.contains(child)) && (temp_f_scores >= child.f_scores)) {
-					continue;
-				}
-
-				/*
-				 * else if child node is not in queue or newer f_score is lower
-				 */
-
-				else if ((!queue.contains(child)) || (temp_f_scores < child.f_scores)) {
-
-					child.parent = current;
-					child.g_scores = temp_g_scores;
-					child.f_scores = temp_f_scores;
-
-					if (queue.contains(child)) {
-						queue.remove(child);
-					}
-					queue.add(child);
-				}
-			}
-		}
-
 	}
 
 	static void setTree(Node root, int[][] copied_maze) {
@@ -702,14 +610,7 @@ public class Main extends Application {
 		
 		for (Edge e : root.adjacencies)
 			setTree(e.target, Arrays.stream(copied_maze).map(int[]::clone).toArray(int[][]::new));
-//		int[][] copied_maze_for_left = Arrays.stream(copied_maze).map(int[]::clone).toArray(int[][]::new);
-//		int[][] copied_maze_for_down = Arrays.stream(copied_maze).map(int[]::clone).toArray(int[][]::new);
-//		int[][] copied_maze_for_up = Arrays.stream(copied_maze).map(int[]::clone).toArray(int[][]::new);
-//		int[][] copied_maze_for_right = Arrays.stream(copied_maze).map(int[]::clone).toArray(int[][]::new);
-//		setTree(root.left, copied_maze_for_left);
-//		setTree(root.down, copied_maze_for_down);
-//		setTree(root.up, copied_maze_for_up);
-//		setTree(root.right, copied_maze_for_right);
+
 
 		return;
 	}
@@ -747,7 +648,7 @@ public class Main extends Application {
 
 		for (Node node = target; node != null; node = node.parent) {
 			path.add(node);
-			// System.out.println("Path [x,y] =" + node.x + " ," + node.y);
+			System.out.println("Path [x,y] =" + node.x + " ," + node.y);
 		}
 
 		Collections.reverse(path);
