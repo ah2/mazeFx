@@ -8,4 +8,9 @@ public 	class Edge {
 		target = targetNode;
 		cost = costVal;
 		}
+	
+	public String toString(){
+        return String.format("[%d, %d, %d]", target.x, target.y, cost);
+	}
+	
 	}

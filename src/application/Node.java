@@ -65,6 +65,6 @@ public class Node {
 	
 	public String toString(){
         return String.format("[%d, %d]", x, y);
-}
-	
 	}
+	
+}
