@@ -1,6 +1,9 @@
 package application;
 
 import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -12,6 +15,12 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
+
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -305,7 +314,71 @@ public class Main extends Application {
 
 	}
 
+    public static int[][] Maze2DArr(BufferedImage mazefile) {
+        int height = mazefile.getHeight();
+        int width = mazefile.getWidth();
+        int [][] maze2DArr = new int[height][width];
+        
+        
+        /* Fill the 2D array:
+            0 - path
+            1 - wall
+         */
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                if (mazefile.getRGB(x,y) == -1) {
+                    maze2DArr[y][x] = 0;
+                } else {
+                    maze2DArr[y][x] = 1;
+                }
+            }
+        }
+
+//        // get the starting point
+//        for (int x = 0; x < this.width; x++) {
+//            if (this.maze[0][x] == 0) {
+//                this.start = new Coordinates(x, 0);
+//                break;
+//            }
+//        }
+//
+//        // get the exit point
+//        for (int x = 0; x < this.width; x++) {
+//            if (this.maze[height - 1][x] == 0) {
+//                this.exit = new Coordinates(x, height - 1);
+//                break;
+//            }
+//        }
+        return maze2DArr;
+    }
+    
+    public static void printMazearr(int[][] maze) {
+    	System.out.print("int[][] maze = {\n");
+        for (int y = 0; y < maze.length; y++) {
+        	System.out.print("{");
+            for (int x = 0; x < maze[0].length; x++) {
+            	System.out.print(maze[y][x] + ((x!=maze[0].length-1)?", ":"},\n"));
+            }
+        }
+        System.out.print("\n}");
+    }
+	
+	
 	public static void main(String[] args) {
+		
+        try {
+            String filename = "closedmaze.png";
+
+			File image = new File("mazes/" + filename);
+			BufferedImage mazeimg = ImageIO.read(image);
+			System.out.println("Successfully read maze!");
+			int[][] mazearr = Maze2DArr(mazeimg);
+			printMazearr(mazearr);
+           
+        }
+        catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
 
 		for (int i = 0; i < maze[0].length; i++) {
 			if (maze[0][i] == 2) {
