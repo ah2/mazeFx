@@ -357,8 +357,10 @@ public class Main extends Application {
         for (int y = 0; y < maze.length; y++) {
         	System.out.print("{");
             for (int x = 0; x < maze[0].length; x++) {
-            	System.out.print(maze[y][x] + ((x!=maze[0].length-1)?", ":"},\n"));
+            	System.out.print(maze[y][x] + ((x!=maze[0].length-1)?", ":"}"));
+            	
             }
+            System.out.print((y!=maze.length-1)?",\n":"\n}");
         }
         System.out.print("\n}");
     }
