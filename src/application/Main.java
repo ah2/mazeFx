@@ -128,8 +128,10 @@ public class Main extends Application {
 	static Pane pane = new Pane();
 	static Rectangle[][] rect = new Rectangle[row][col];
 	static boolean mazeClean = true;
-	static int dealyAnimation = 1;
-	static int Animation_speed = 10;
+	static int dealyAnimation = 100;
+	static int Animation_speed = 500;
+	
+	static Timeline timeline= new Timeline();;
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -211,10 +213,13 @@ public class Main extends Application {
 		EventHandler<ActionEvent> DFSevent = new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent e) {
 				// System.out.print("pressed");
-				if (!mazeClean)
-					cleanMaze();
+				if (!mazeClean) {
+					timeline.stop();
+	            	timeline.getKeyFrames().clear();
+	            	cleanMaze();}
 
 				DFS(root);
+            	timeline.playFromStart();
 				dealyAnimation = 100;
 				mazeClean = false;
 			}
@@ -223,10 +228,13 @@ public class Main extends Application {
 		EventHandler<ActionEvent> BFSevent = new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent e) {
 				// System.out.print("pressed");
-				if (!mazeClean)
-					cleanMaze();
+				if (!mazeClean) {
+					timeline.stop();
+	            	timeline.getKeyFrames().clear();
+	            	cleanMaze();}
 
 				BFS(root, Arrays.stream(maze).map(int[]::clone).toArray(int[][]::new));
+            	timeline.playFromStart();
 				dealyAnimation = 100;
 				mazeClean = false;
 			}
@@ -235,10 +243,14 @@ public class Main extends Application {
 		EventHandler<ActionEvent> AstarEvent = new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent e) {
 				// System.out.print("pressed");
-				if (!mazeClean)
-					cleanMaze();
+				if (!mazeClean) {
+				timeline.stop();
+            	timeline.getKeyFrames().clear();
+            	cleanMaze();}
+				
 				BFSAstar(root, Arrays.stream(maze).map(int[]::clone).toArray(int[][]::new));
 				fillpath(getPath(goal));
+            	timeline.playFromStart();
 				dealyAnimation = 100;
 				mazeClean = false;
 			}
@@ -246,16 +258,29 @@ public class Main extends Application {
 
 		EventHandler<ActionEvent> Slower_Animation = new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent e) {
+				if(Animation_speed < 100) {
+					Animation_speed += 10;
+				}
+				else {
 				Animation_speed += 100;
+				}
+				
 				Speed_Text.setText("SPEED: " + (float) Animation_speed / 1000 + "s");
 			}
 		};
 
 		EventHandler<ActionEvent> Faster_Animition = new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent e) {
-				if (Animation_speed > 100) {
+				if(Animation_speed > 100) {
 					Animation_speed -= 100;
 					Speed_Text.setText("SPEED: " + (float) Animation_speed / 1000 + "s");
+				}
+				else if (Animation_speed > 10) {
+					Animation_speed -= 10;
+					Speed_Text.setText("SPEED: " + (float) Animation_speed / 1000 + "s");
+				}
+				else {
+					//do nothing
 				}
 			}
 		};
@@ -323,7 +348,7 @@ public class Main extends Application {
 		}
 
 		if (maze[root.y][root.x] != 2) {
-			Timeline timeline = new Timeline(new KeyFrame(Duration.millis(dealyAnimation), evt -> {
+			 timeline.getKeyFrames().add(new KeyFrame(Duration.millis(dealyAnimation), evt -> {
 				rect[root.y][root.x].setFill(Color.BLUE);
 				rect[root.y][root.x].setStroke(Color.WHITE);
 
@@ -367,7 +392,7 @@ public class Main extends Application {
 			}
 
 			if (maze[u.y][u.x] != 2) {
-				Timeline timeline = new Timeline(new KeyFrame(Duration.millis(dealyAnimation), evt -> {
+				timeline.getKeyFrames().add(new KeyFrame(Duration.millis(dealyAnimation), evt -> {
 					rect[u.y][u.x].setFill(Color.BLUE);
 					rect[u.y][u.x].setStroke(Color.WHITE);
 				})
@@ -427,7 +452,7 @@ public class Main extends Application {
 			}
 
 			if (maze[u.y][u.x] != 2) {
-				Timeline timeline = new Timeline(new KeyFrame(Duration.millis(dealyAnimation), evt -> {
+				timeline.getKeyFrames().add(new KeyFrame(Duration.millis(dealyAnimation), evt -> {
 					rect[u.y][u.x].setFill(Color.BLUE);
 					rect[u.y][u.x].setStroke(Color.WHITE);
 				})
@@ -494,7 +519,7 @@ public class Main extends Application {
 			}
 
 			if (maze[current.y][current.x] != 2) {
-				Timeline timeline = new Timeline(new KeyFrame(Duration.millis(dealyAnimation), evt -> {
+				timeline.getKeyFrames().add(new KeyFrame(Duration.millis(dealyAnimation), evt -> {
 					rect[current.y][current.x].setFill(Color.BLUE);
 					rect[current.y][current.x].setStroke(Color.WHITE);
 				})
@@ -623,7 +648,7 @@ public class Main extends Application {
 		while (crunchifyIterator.hasNext()) {
 			Node tmp = crunchifyIterator.next();
 
-			Timeline timeline = new Timeline(new KeyFrame(Duration.millis(dealyAnimation), evt -> {
+			timeline.getKeyFrames().add(new KeyFrame(Duration.millis(dealyAnimation), evt -> {
 				// if (tmp.x < maze.length && tmp.y < maze[0].length)
 				{
 					rect[tmp.y][tmp.x].setFill(Color.GREEN);
