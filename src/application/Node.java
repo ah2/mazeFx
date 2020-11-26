@@ -6,10 +6,10 @@ public class Node {
 
 	int x;
 	int y;
-	Node left;
-	Node down;
-	Node up;
-	Node right;
+//	Node left;
+//	Node down;
+//	Node up;
+//	Node right;
 	Node parent;
 	public double g_scores;
 	public double h_scores;
@@ -32,10 +32,10 @@ public class Node {
 	Node(int y, int x) {
 		this.x = x;
 		this.y = y;
-		left = null;
-		down = null;
-		up = null;
-		right = null;
+//		left = null;
+//		down = null;
+//		up = null;
+//		right = null;
 		h_scores = 0;
 		f_scores = 0;
 		adjacencies = new LinkedList<Edge>();
@@ -44,20 +44,20 @@ public class Node {
 	Node(int x, int y, double hVal) {
 		this.x = x;
 		this.y = y;
-		left = null;
-		down = null;
-		up = null;
-		right = null;
+//		left = null;
+//		down = null;
+//		up = null;
+//		right = null;
 		h_scores = hVal;
 		f_scores = 0;
 		adjacencies = new LinkedList<Edge>();
 	}
 
 	Node() {
-		left = null;
-		down = null;
-		up = null;
-		right = null;
+//		left = null;
+//		down = null;
+//		up = null;
+//		right = null;
 		h_scores = 0;
 		f_scores = 0;
 		adjacencies = new LinkedList<Edge>();

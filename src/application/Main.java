@@ -356,18 +356,21 @@ public class Main extends Application {
 			timeline.play();
 			dealyAnimation += Animation_speed;
 		}
-
-		if (DFS(root.left))
-			return true;
-
-		if (DFS(root.down))
-			return true;
-
-		if (DFS(root.up))
-			return true;
-
-		if (DFS(root.right))
-			return true;
+		
+		for (Edge e : root.adjacencies)
+			if(DFS(e.target))
+				return true;
+//		if (DFS(root.left))
+//			return true;
+//
+//		if (DFS(root.down))
+//			return true;
+//
+//		if (DFS(root.up))
+//			return true;
+//
+//		if (DFS(root.right))
+//			return true;
 
 		return false;
 	}
@@ -401,15 +404,17 @@ public class Main extends Application {
 				timeline.play();
 				dealyAnimation += Animation_speed;
 			}
-
-			if (u.left != null)
-				q.add(u.left);
-			if (u.down != null)
-				q.add(u.down);
-			if (u.up != null)
-				q.add(u.up);
-			if (u.right != null)
-				q.add(u.right);
+			
+			for (Edge e : u.adjacencies)
+				q.add(e.target);
+//			if (u.left != null)
+//				q.add(u.left);
+//			if (u.down != null)
+//				q.add(u.down);
+//			if (u.up != null)
+//				q.add(u.up);
+//			if (u.right != null)
+//				q.add(u.right);
 		}
 
 		return;
@@ -461,15 +466,17 @@ public class Main extends Application {
 				timeline.play();
 				dealyAnimation += Animation_speed;
 			}
-
-			if (u.left != null)
-				q.add(u.left);
-			if (u.down != null)
-				q.add(u.down);
-			if (u.up != null)
-				q.add(u.up);
-			if (u.right != null)
-				q.add(u.right);
+			
+			for (Edge e : u.adjacencies)
+				q.add(e.target);
+//			if (u.left != null)
+//				q.add(u.left);
+//			if (u.down != null)
+//				q.add(u.down);
+//			if (u.up != null)
+//				q.add(u.up);
+//			if (u.right != null)
+//				q.add(u.right);
 		}
 
 		return;
@@ -578,60 +585,62 @@ public class Main extends Application {
 		// System.out.println(root.y+" "+root.x);
 		root.setf_scores(Point2D.distance(root.x, root.y, goal.x, goal.y));
 		if (root.x - 1 == -1) {
-			root.left = null;
+			//root.left = null;
 		} else if (copied_maze[root.y][root.x - 1] == 1) {
-			root.left = null;
+			//root.left = null;
 		} else {
-			root.left = new Node(root.y, root.x - 1);
+			//root.left = new Node(root.y, root.x - 1);
 			copied_maze[root.y][root.x - 1] = 1;
-			root.left.setParent(root);
-			root.adjacencies.add(new Edge(root.left, 1.0));
+			//root.left.setParent(root);
+			root.adjacencies.add(new Edge(new Node(root.y, root.x - 1), 1.0));
 		}
 
 		// down
 		if (root.y + 1 == copied_maze.length) {
-			root.down = null;
+			//root.down = null;
 		} else if (copied_maze[root.y + 1][root.x] == 1) {
-			root.down = null;
+			//root.down = null;
 		} else {
-			root.down = new Node(root.y + 1, root.x);
+			//root.down = new Node(root.y + 1, root.x);
 			copied_maze[root.y + 1][root.x] = 1;
-			root.down.setParent(root);
-			root.adjacencies.add(new Edge(root.down, 1.0));
+			//root.down.setParent(root);
+			root.adjacencies.add(new Edge(new Node(root.y + 1, root.x), 1.0));
 		}
 
 		// up
 		if (root.y - 1 == -1) {
-			root.up = null;
+			//root.up = null;
 		} else if (copied_maze[root.y - 1][root.x] == 1) {
-			root.up = null;
+			//root.up = null;
 		} else {
-			root.up = new Node(root.y - 1, root.x);
+			//root.up = new Node(root.y - 1, root.x);
 			copied_maze[root.y - 1][root.x] = 1;
-			root.up.setParent(root);
-			root.adjacencies.add(new Edge(root.up, 1.0));
+			//root.up.setParent(root);
+			root.adjacencies.add(new Edge(new Node(root.y - 1, root.x), 1.0));
 		}
 
 		// right
 		if (root.x + 1 == copied_maze[0].length) {
-			root.right = null;
+			//root.right = null;
 		} else if (copied_maze[root.y][root.x + 1] == 1) {
-			root.right = null;
+			//root.right = null;
 		} else {
-			root.right = new Node(root.y, root.x + 1);
+			//root.right = new Node(root.y, root.x + 1);
 			copied_maze[root.y][root.x + 1] = 1;
-			root.right.setParent(root);
-			root.adjacencies.add(new Edge(root.right, 1.0));
+			//root.right.setParent(root);
+			root.adjacencies.add(new Edge(new Node(root.y, root.x + 1), 1.0));
 		}
-
-		int[][] copied_maze_for_left = Arrays.stream(copied_maze).map(int[]::clone).toArray(int[][]::new);
-		int[][] copied_maze_for_down = Arrays.stream(copied_maze).map(int[]::clone).toArray(int[][]::new);
-		int[][] copied_maze_for_up = Arrays.stream(copied_maze).map(int[]::clone).toArray(int[][]::new);
-		int[][] copied_maze_for_right = Arrays.stream(copied_maze).map(int[]::clone).toArray(int[][]::new);
-		setTree(root.left, copied_maze_for_left);
-		setTree(root.down, copied_maze_for_down);
-		setTree(root.up, copied_maze_for_up);
-		setTree(root.right, copied_maze_for_right);
+		
+		for (Edge e : root.adjacencies)
+			setTree(e.target, Arrays.stream(copied_maze).map(int[]::clone).toArray(int[][]::new));
+//		int[][] copied_maze_for_left = Arrays.stream(copied_maze).map(int[]::clone).toArray(int[][]::new);
+//		int[][] copied_maze_for_down = Arrays.stream(copied_maze).map(int[]::clone).toArray(int[][]::new);
+//		int[][] copied_maze_for_up = Arrays.stream(copied_maze).map(int[]::clone).toArray(int[][]::new);
+//		int[][] copied_maze_for_right = Arrays.stream(copied_maze).map(int[]::clone).toArray(int[][]::new);
+//		setTree(root.left, copied_maze_for_left);
+//		setTree(root.down, copied_maze_for_down);
+//		setTree(root.up, copied_maze_for_up);
+//		setTree(root.right, copied_maze_for_right);
 
 		return;
 	}
