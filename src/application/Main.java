@@ -58,7 +58,7 @@ public class Main extends Application {
 	public void start(Stage primaryStage) {
 
 		try {
-			String filename = "closedMazeM.png";
+			String filename = "openmaze.png";
 
 			File image = new File("mazes/" + filename);
 			BufferedImage mazeimg = ImageIO.read(image);
@@ -85,7 +85,7 @@ public class Main extends Application {
 
 			mazeCopy[root.y][root.x] = 1;
 			// System.out.println("setting tree");
-			setTree(root, mazeCopy);
+			setTreeQ(root, mazeCopy);
 			// System.out.println("tree");
 
 		} catch (IOException e) {
@@ -463,7 +463,7 @@ public class Main extends Application {
 		return;
 	}
 
-	static void setTree(Node root, int[][] copied_maze) {
+	static void setTreeRec(Node root, int[][] copied_maze) {
 		if (root == null)
 			return;
 
@@ -495,9 +495,51 @@ public class Main extends Application {
 
 		for (Node n : root.adjacencies) {
 			n.setParent(root);
-			setTree(n, Arrays.stream(copied_maze).map(int[]::clone).toArray(int[][]::new));
+			setTreeRec(n, Arrays.stream(copied_maze).map(int[]::clone).toArray(int[][]::new));
 		}
 		return;
+	}
+
+	static void setTreeQ(Node root, int[][] copied_maze) {
+		Queue<Node> q = new LinkedList<Node>();
+		if (root != null)
+			q.add(root);
+		else
+			return;
+
+		while (!q.isEmpty()) {
+			Node u = q.remove();
+			u.setF_scores(Point2D.distance(u.x, u.y, goal.x, goal.y));
+
+			// left
+			if (u.x - 1 != -1 && copied_maze[u.y][u.x - 1] != 1) {
+				copied_maze[u.y][u.x - 1] = 1;
+				u.adjacencies.add(new Node(u.y, u.x - 1));
+			}
+
+			// down
+			if (u.y + 1 != copied_maze.length && copied_maze[u.y + 1][u.x] != 1) {
+				copied_maze[u.y + 1][u.x] = 1;
+				u.adjacencies.add(new Node(u.y + 1, u.x));
+			}
+
+			// up
+			if (u.y - 1 != -1 && copied_maze[u.y - 1][u.x] != 1) {
+				copied_maze[u.y - 1][u.x] = 1;
+				u.adjacencies.add(new Node(u.y - 1, u.x));
+			}
+
+			// right
+			if (u.x + 1 != copied_maze[0].length && copied_maze[u.y][u.x + 1] != 1) {
+				copied_maze[u.y][u.x + 1] = 1;
+				u.adjacencies.add(new Node(u.y, u.x + 1));
+			}
+
+			for (Node n : u.adjacencies) {
+				n.setParent(u);
+				q.add(n);
+			}
+		}
 	}
 
 	void cleanMaze() {
@@ -522,7 +564,7 @@ public class Main extends Application {
 
 			);
 			timeline.play();
-			dealyAnimation += Animation_speed;
+			dealyAnimation += Animation_speed/10;
 		}
 	}
 
@@ -531,7 +573,7 @@ public class Main extends Application {
 
 		for (Node node = target; node != null; node = node.parent) {
 			path.add(node);
-			//System.out.print(String.format("[%d, %d], ", node.x, node.y));
+			// System.out.print(String.format("[%d, %d], ", node.x, node.y));
 		}
 		Collections.reverse(path);
 
