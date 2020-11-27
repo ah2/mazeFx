@@ -35,7 +35,7 @@ public class MainMenu {
 		for (File file : listOfFiles)
 		{
 		
-			Button mazeName = new Button(file.getName());
+			Button mazeName = new Button(file.getName().replace(".png",""));
 			mazeName.setFont(new Font("Verdana", Font.BOLD, 32));
 			mazeName.addActionListener(new ActionListener()
 			{
