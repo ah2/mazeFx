@@ -501,25 +501,25 @@ public class Main extends Application {
 
 		// left
 		if (root.x - 1 != -1 && copied_maze[root.y][root.x - 1] != 1) {
-			copied_maze[root.y][root.x - 1] = 1;
+			//copied_maze[root.y][root.x - 1] = 1;
 			root.adjacencies.add(new Node(root.y, root.x - 1));
 		}
 
 		// down
 		if (root.y + 1 != copied_maze.length && copied_maze[root.y + 1][root.x] != 1) {
-			copied_maze[root.y + 1][root.x] = 1;
+			//copied_maze[root.y + 1][root.x] = 1;
 			root.adjacencies.add(new Node(root.y + 1, root.x));
 		}
 
 		// up
 		if (root.y - 1 != -1 && copied_maze[root.y - 1][root.x] != 1) {
-			copied_maze[root.y - 1][root.x] = 1;
+			//copied_maze[root.y - 1][root.x] = 1;
 			root.adjacencies.add(new Node(root.y - 1, root.x));
 		}
 
 		// right
 		if (root.x + 1 != copied_maze[0].length && copied_maze[root.y][root.x + 1] != 1) {
-			copied_maze[root.y][root.x + 1] = 1;
+			//copied_maze[root.y][root.x + 1] = 1;
 			root.adjacencies.add(new Node(root.y, root.x + 1));
 		}
 
