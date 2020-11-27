@@ -185,7 +185,8 @@ public class Main extends Application {
 	            	}
 				
 				DFS(root);
-            	timeline.playFromStart();
+				fillpath(getPath(goal));
+				timeline.playFromStart();
 				dealyAnimation = 100;
 				mazeClean = false;
 			}
@@ -200,7 +201,8 @@ public class Main extends Application {
 	            	cleanMaze();}
 
 				BFS(root, Arrays.stream(maze).map(int[]::clone).toArray(int[][]::new));
-            	timeline.playFromStart();
+				fillpath(getPath(goal));
+				timeline.playFromStart();
 				dealyAnimation = 100;
 				mazeClean = false;
 			}
@@ -341,9 +343,9 @@ public class Main extends Application {
 		if (maze[root.y][root.x] == 3) {
 
 			long estimatedTime = System.nanoTime() - startTime;
-			System.out.println("DFS Reached exist in (seconds) "+ String.format("%.2f",(estimatedTime / 1e9)) 
-			+ " and taken " + steps + " steps");
+			System.out.println(String.format("DFS Reached exist in: %.2f seconds and taken: %d steps",estimatedTime / 1e9, steps));
 			startTime = steps = 0;
+			goal=root;
 			return true;
 		}
 
@@ -385,9 +387,9 @@ public class Main extends Application {
 
 			if (maze[u.y][u.x] == 3) {
 				long estimatedTime = System.nanoTime() - startTime;
-				System.out.println("BFS Reached exist in (seconds) "+ String.format("%.2f",estimatedTime / 1e9) 
-						+ " and taken " + steps + " steps");
+				System.out.println(String.format("BFS Reached exist in: %.2f seconds and taken: %d steps",estimatedTime / 1e9, steps));
 				startTime = steps = 0;
+				goal=u;
 				return;
 			}
 
@@ -445,9 +447,9 @@ public class Main extends Application {
 
 			if (maze[u.y][u.x] == 3) {
 				long estimatedTime = System.nanoTime() - startTime;
-				System.out.println("A*  Reached exist in (seconds) "+ String.format("%.2f",estimatedTime / 1e9) 
-						+ " and taken " + steps + " steps");
+				System.out.println(String.format("A*  Reached exist in: %.2f seconds and taken: %d steps",estimatedTime / 1e9, steps));
 				startTime = steps = 0;
+				goal = u;
 				return;
 			}
 
@@ -456,7 +458,6 @@ public class Main extends Application {
 					rect[u.y][u.x].setFill(Color.BLUE);
 					rect[u.y][u.x].setStroke(Color.WHITE);
 				})
-
 				);
 				timeline.play();
 				dealyAnimation += Animation_speed;
@@ -506,9 +507,10 @@ public class Main extends Application {
 			root.adjacencies.add(new Node(root.y, root.x + 1));
 		}
 		
-		for (Node e : root.adjacencies)
-			setTree(e, Arrays.stream(copied_maze).map(int[]::clone).toArray(int[][]::new));
-
+		for (Node n : root.adjacencies) {
+			n.setParent(root);
+			setTree(n, Arrays.stream(copied_maze).map(int[]::clone).toArray(int[][]::new));
+		}
 		return;
 	}
 
@@ -545,7 +547,7 @@ public class Main extends Application {
 
 		for (Node node = target; node != null; node = node.parent) {
 			path.add(node);
-			System.out.println("Path [x,y] =" + node.x + " ," + node.y);
+			//System.out.println("Path [x,y] =" + node.x + " ," + node.y);
 		}
 		Collections.reverse(path);
 
