@@ -58,7 +58,7 @@ public class Main extends Application {
 	public void start(Stage primaryStage) {
 
 		try {
-			String filename = "closedmaze.png";
+			String filename = "closedMazeM.png";
 
 			File image = new File("mazes/" + filename);
 			BufferedImage mazeimg = ImageIO.read(image);
