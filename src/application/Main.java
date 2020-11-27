@@ -33,7 +33,8 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class Main extends Application {
-
+	
+	static String[] startArgs;
 	long startTime;
 	int steps;
 	static int[][] maze;
@@ -73,8 +74,8 @@ public class Main extends Application {
 
 		try {
 			//String filename = "openMazeL.png";
-
 			//File image = new File("mazes/" + filename);
+			
 			File image = listOfFiles[myObj.nextInt()];
 			BufferedImage mazeimg = ImageIO.read(image);
 			System.out.println("Successfully read maze!");
@@ -324,10 +325,17 @@ public class Main extends Application {
 	}
 
 	public static void main(String[] args) {
-
-		launch(args);
+		new MainMenu();
+		startArgs = args;
+		//launch(args);
 
 	}
+	
+	public static void start() {
+		launch(startArgs);
+	}
+	
+	
 
 	boolean DFS(Node root) {
 		if (startTime == 0) {
@@ -558,8 +566,14 @@ public class Main extends Application {
 	void cleanMaze() {
 		for (int r = 0; r < maze.length; r++)
 			for (int c = 0; c < maze[0].length; c++)
-				if (maze[r][c] == 0)
-					rect[r][c].setFill(Color.WHITE);
+			{if (maze[r][c] == 0)
+				rect[r][c].setFill(Color.WHITE);
+			if (maze[r][c] == 2)
+				rect[r][c].setFill(Color.RED);
+			if (maze[r][c] == 3)
+				rect[r][c].setFill(Color.GREEN);
+				}
+		
 	}
 	
 	static Node getGoal() {
