@@ -58,7 +58,7 @@ public class Main extends Application {
 	public void start(Stage primaryStage) {
 
 		try {
-			String filename = "openmaze.png";
+			String filename = "openMazeL.png";
 
 			File image = new File("mazes/" + filename);
 			BufferedImage mazeimg = ImageIO.read(image);
@@ -573,7 +573,7 @@ public class Main extends Application {
 
 		for (Node node = target; node != null; node = node.parent) {
 			path.add(node);
-			// System.out.print(String.format("[%d, %d], ", node.x, node.y));
+			System.out.print(String.format("[%d, %d](%.2f), ", node.x, node.y,node.f_scores));
 		}
 		Collections.reverse(path);
 
