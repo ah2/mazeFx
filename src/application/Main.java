@@ -55,29 +55,17 @@ public class Main extends Application {
 	static int dealyAnimation;
 	static int Animation_speed;
 	static Timeline timeline;
+	static File mazeFile;
 
 	@Override
 	public void start(Stage primaryStage) {
 		
-		File folder = new File("mazes");
-		File[] listOfFiles = folder.listFiles();
-
-		int count = 0;
-		for (File file : listOfFiles)
-		{
-			System.out.println(count +": " + file.getName());
-			count++;
-		}
-		
-		Scanner myObj = new Scanner(System.in);
-		System.out.print("Enter the number of the maze you want to load: ");
 
 		try {
 			//String filename = "openMazeL.png";
 			//File image = new File("mazes/" + filename);
 			
-			File image = listOfFiles[myObj.nextInt()];
-			BufferedImage mazeimg = ImageIO.read(image);
+			BufferedImage mazeimg = ImageIO.read(mazeFile);
 			System.out.println("Successfully read maze!");
 			int[][] mazearr = Maze2DArr(mazeimg);
 			// printMazearr(mazearr);
@@ -331,7 +319,8 @@ public class Main extends Application {
 
 	}
 	
-	public static void start() {
+	public static void start(File maze) {
+		mazeFile = maze;
 		launch(startArgs);
 	}
 	
@@ -572,8 +561,7 @@ public class Main extends Application {
 				rect[r][c].setFill(Color.RED);
 			if (maze[r][c] == 3)
 				rect[r][c].setFill(Color.GREEN);
-				}
-		
+				}	
 	}
 	
 	static Node getGoal() {

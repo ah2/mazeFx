@@ -1,9 +1,11 @@
 package application;
 
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+
 
 /**
  * A class that sets up the main menu user interface for selecting
@@ -25,34 +27,34 @@ public class MainMenu {
 	 */
 	public MainMenu(){
 		
-		BoxLayout boxLayout = new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS); 
+		BoxLayout boxLayout = new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS);
 		
-		Button play = new Button("Play");
-		play.setFont(new Font("Verdana", Font.BOLD, 32));
+		File folder = new File("mazes");
+		File[] listOfFiles = folder.listFiles();
+		String[] filename = new String[listOfFiles.length];
+		for (File file : listOfFiles)
+		{
 		
-		Button instruction = new Button("Instructions");
-		instruction.setFont(new Font("Verdana", Font.BOLD, 32));
-		
-		frame.add(play); 
-		frame.add(instruction);
-
+			Button mazeName = new Button(file.getName());
+			mazeName.setFont(new Font("Verdana", Font.BOLD, 32));
+			mazeName.addActionListener(new ActionListener()
+			{
+				public void actionPerformed(ActionEvent ae)
+				{	
+					frame.dispose();
+					//new Difficulty();
+					Main.start(file);
+				}
+			});		
+			
+			frame.add(mazeName);
+		}
 		frame.setLayout(boxLayout);
 		frame.setSize(500,500);
 		frame.setLocationRelativeTo(null);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(false);
 		frame.setVisible(true);		
-		
-		play.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent ae)
-			{	
-				frame.dispose();
-				//new Difficulty();
-				Main.start();
-			}
-		});
-		
 		
 	}
 }
