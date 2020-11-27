@@ -49,7 +49,6 @@ public class Main extends Application {
 	static Text Speed_Text;
 	static Node root;
 	static Node goal;
-	static Set<Node> explored;
 	static int row;
 	static int col;
 	static int mazeScale;
@@ -342,7 +341,7 @@ public class Main extends Application {
 		if (maze[root.y][root.x] == 3) {
 
 			long estimatedTime = System.nanoTime() - startTime;
-			System.out.println("DFS Reached exist in (nanoseconds)"+ estimatedTime
+			System.out.println("DFS Reached exist in (seconds) "+ String.format("%.2f",(estimatedTime / 1e9)) 
 			+ " and taken " + steps + " steps");
 			startTime = steps = 0;
 			return true;
@@ -358,8 +357,8 @@ public class Main extends Application {
 			dealyAnimation += Animation_speed;
 		}
 		
-		for (Edge e : root.adjacencies)
-			if(DFS(e.target))
+		for (Node e : root.adjacencies)
+			if(DFS(e))
 				return true;
 
 		return false;
@@ -386,7 +385,7 @@ public class Main extends Application {
 
 			if (maze[u.y][u.x] == 3) {
 				long estimatedTime = System.nanoTime() - startTime;
-				System.out.println("BFS Reached exist in (nanoseconds)"+ estimatedTime 
+				System.out.println("BFS Reached exist in (seconds) "+ String.format("%.2f",estimatedTime / 1e9) 
 						+ " and taken " + steps + " steps");
 				startTime = steps = 0;
 				return;
@@ -403,8 +402,8 @@ public class Main extends Application {
 				dealyAnimation += Animation_speed;
 			}
 			
-			for (Edge e : u.adjacencies)
-				q.add(e.target);
+			for (Node e : u.adjacencies)
+				q.add(e);
 			
 			steps++;			
 		}
@@ -446,7 +445,7 @@ public class Main extends Application {
 
 			if (maze[u.y][u.x] == 3) {
 				long estimatedTime = System.nanoTime() - startTime;
-				System.out.println("A* Reached exist in (nanoseconds)"+ estimatedTime 
+				System.out.println("A*  Reached exist in (seconds) "+ String.format("%.2f",estimatedTime / 1e9) 
 						+ " and taken " + steps + " steps");
 				startTime = steps = 0;
 				return;
@@ -463,9 +462,8 @@ public class Main extends Application {
 				dealyAnimation += Animation_speed;
 			}
 			
-			for (Edge e : u.adjacencies) {
-				//e.target.setParent(root);
-				q.add(e.target);
+			for (Node e : u.adjacencies) {
+				q.add(e);
 				}
 			steps++;
 		}
@@ -475,66 +473,41 @@ public class Main extends Application {
 	static void setTree(Node root, int[][] copied_maze) {
 		if (root == null)
 			return;
-		if (explored == null)
-			explored = new HashSet<Node>();
-		
-		if(explored.contains(root))
-			return;
-		explored.add(root);
-		// root.adjacencies = new LinkedList<Edge>();
-		// left
-		// System.out.println(root.y+" "+root.x);
+
 		root.setf_scores(Point2D.distance(root.x, root.y, goal.x, goal.y));
 		if (root.x - 1 == -1) {
-			//root.left = null;
 		} else if (copied_maze[root.y][root.x - 1] == 1) {
-			//root.left = null;
 		} else {
-			//root.left = new Node(root.y, root.x - 1);
 			copied_maze[root.y][root.x - 1] = 1;
-			//root.left.setParent(root);
-			root.adjacencies.add(new Edge(new Node(root.y, root.x - 1), 1.0));
+			root.adjacencies.add(new Node(root.y, root.x - 1));
 		}
 
 		// down
 		if (root.y + 1 == copied_maze.length) {
-			//root.down = null;
 		} else if (copied_maze[root.y + 1][root.x] == 1) {
-			//root.down = null;
 		} else {
-			//root.down = new Node(root.y + 1, root.x);
 			copied_maze[root.y + 1][root.x] = 1;
-			//root.down.setParent(root);
-			root.adjacencies.add(new Edge(new Node(root.y + 1, root.x), 1.0));
+			root.adjacencies.add(new Node(root.y + 1, root.x));
 		}
 
 		// up
 		if (root.y - 1 == -1) {
-			//root.up = null;
 		} else if (copied_maze[root.y - 1][root.x] == 1) {
-			//root.up = null;
 		} else {
-			//root.up = new Node(root.y - 1, root.x);
 			copied_maze[root.y - 1][root.x] = 1;
-			//root.up.setParent(root);
-			root.adjacencies.add(new Edge(new Node(root.y - 1, root.x), 1.0));
+			root.adjacencies.add(new Node(root.y - 1, root.x));
 		}
 
 		// right
 		if (root.x + 1 == copied_maze[0].length) {
-			//root.right = null;
 		} else if (copied_maze[root.y][root.x + 1] == 1) {
-			//root.right = null;
 		} else {
-			//root.right = new Node(root.y, root.x + 1);
 			copied_maze[root.y][root.x + 1] = 1;
-			//root.right.setParent(root);
-			root.adjacencies.add(new Edge(new Node(root.y, root.x + 1), 1.0));
+			root.adjacencies.add(new Node(root.y, root.x + 1));
 		}
 		
-		for (Edge e : root.adjacencies)
-			setTree(e.target, Arrays.stream(copied_maze).map(int[]::clone).toArray(int[][]::new));
-
+		for (Node e : root.adjacencies)
+			setTree(e, Arrays.stream(copied_maze).map(int[]::clone).toArray(int[][]::new));
 
 		return;
 	}
@@ -574,7 +547,6 @@ public class Main extends Application {
 			path.add(node);
 			System.out.println("Path [x,y] =" + node.x + " ," + node.y);
 		}
-
 		Collections.reverse(path);
 
 		return path;

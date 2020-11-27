@@ -6,15 +6,12 @@ public class Node {
 
 	int x;
 	int y;
-//	Node left;
-//	Node down;
-//	Node up;
-//	Node right;
+
 	Node parent;
 	public double g_scores;
 	public double h_scores;
 	public double f_scores;
-	LinkedList<Edge> adjacencies;
+	LinkedList<Node> adjacencies;
 
 	void setPosition(int y, int x) {
 		this.x = x;
@@ -32,35 +29,17 @@ public class Node {
 	Node(int y, int x) {
 		this.x = x;
 		this.y = y;
-//		left = null;
-//		down = null;
-//		up = null;
-//		right = null;
 		h_scores = 0;
 		f_scores = 0;
-		adjacencies = new LinkedList<Edge>();
+		adjacencies = new LinkedList<Node>();
 		}
 	
 	Node(int x, int y, double hVal) {
 		this.x = x;
 		this.y = y;
-//		left = null;
-//		down = null;
-//		up = null;
-//		right = null;
 		h_scores = hVal;
 		f_scores = 0;
-		adjacencies = new LinkedList<Edge>();
-	}
-
-	Node() {
-//		left = null;
-//		down = null;
-//		up = null;
-//		right = null;
-		h_scores = 0;
-		f_scores = 0;
-		adjacencies = new LinkedList<Edge>();
+		adjacencies = new LinkedList<Node>();
 	}
 	
 	public String toString(){
