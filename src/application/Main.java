@@ -172,7 +172,7 @@ public class Main extends Application {
 		deacrease_AnimationTime_button.setMinHeight(layout_y * 0.05);
 		deacrease_AnimationTime_button.setFont(Font.font("Arial", 20));
 		
-		results_Text = new Text(layout_x*0.75, layout_y * 0.34, "");
+		results_Text = new Text(layout_x, layout_y * 0.34, "results:");
 		// System.out.print(layout_x);
 		results_Text.setStyle("-fx-font: " + tSize + " arial;");
 		
@@ -351,7 +351,7 @@ public class Main extends Application {
 		if (maze[root.y][root.x] == 3) {
 
 			long estimatedTime = System.nanoTime() - startTime;
-			String resultString= String.format("DFS Reached exist in: %.2f seconds and taken: %d steps",
+			String resultString= String.format("DFS[%.2f second, %d steps]",
 					estimatedTime / 1e9, steps);
 			
 			results_Text.setText(results_Text.getText() + "\n" + resultString);
@@ -401,7 +401,7 @@ public class Main extends Application {
 			if (maze[u.y][u.x] == 3) {
 				long estimatedTime = System.nanoTime() - startTime;
 				
-				String resultString= String.format("BFS Reached exist in: %.2f seconds and taken: %d steps",
+				String resultString= String.format("BFS[%.2f second, %d steps]",
 						estimatedTime / 1e9, steps);
 		
 				results_Text.setText(results_Text.getText() + "\n" + resultString);
@@ -466,7 +466,7 @@ public class Main extends Application {
 
 			if (maze[u.y][u.x] == 3) {
 				long estimatedTime = System.nanoTime() - startTime;
-				String resultString= String.format("A*  Reached exist in: %.2f seconds and taken: %d steps",
+				String resultString= String.format("A*   [%.2f second, %d steps]",
 						estimatedTime / 1e9, steps);
 				
 				results_Text.setText(results_Text.getText() + "\n" + resultString);
