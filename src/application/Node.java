@@ -27,6 +27,10 @@ public class Node {
 		this.h_scores = h_scores;
 	}
 	
+	void setG_scores(double g_scores) {
+		this.h_scores = g_scores;
+	}
+	
 	double getF() {
 		Node goal = Main.getGoal();
 		return Point2D.distance(this.x, this.y, goal.x, goal.y);

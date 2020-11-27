@@ -425,11 +425,11 @@ public class Main extends Application {
 			// override compare method
 			public int compare(Node i, Node j) {
 				if (i.getF() > j.getF()) {
-					return -1;
+					return 1;
 				}
 
 				else if (i.getF() < j.getF()) {
-					return 1;
+					return -1;
 				}
 
 				else {
