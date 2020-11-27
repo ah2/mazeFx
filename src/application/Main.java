@@ -13,6 +13,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.Scanner;
 
 import javax.imageio.ImageIO;
 
@@ -56,11 +57,25 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage primaryStage) {
+		
+		File folder = new File("mazes");
+		File[] listOfFiles = folder.listFiles();
+
+		int count = 0;
+		for (File file : listOfFiles)
+		{
+			System.out.println(count +": " + file.getName());
+			count++;
+		}
+		
+		Scanner myObj = new Scanner(System.in);
+		System.out.print("Enter the number of the maze you want to load: ");
 
 		try {
-			String filename = "openMazeL.png";
+			//String filename = "openMazeL.png";
 
-			File image = new File("mazes/" + filename);
+			//File image = new File("mazes/" + filename);
+			File image = listOfFiles[myObj.nextInt()];
 			BufferedImage mazeimg = ImageIO.read(image);
 			System.out.println("Successfully read maze!");
 			int[][] mazearr = Maze2DArr(mazeimg);
