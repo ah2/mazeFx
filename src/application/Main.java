@@ -44,6 +44,7 @@ public class Main extends Application {
 	static Button increase_AnimationTime_button;
 	static Button deacrease_AnimationTime_button;
 	static Text Speed_Text;
+	static Text results_Text;
 	static Node root;
 	static Node goal;
 	static int row;
@@ -171,6 +172,10 @@ public class Main extends Application {
 		deacrease_AnimationTime_button.setMinHeight(layout_y * 0.05);
 		deacrease_AnimationTime_button.setFont(Font.font("Arial", 20));
 		
+		results_Text = new Text(layout_x*0.75, layout_y * 0.34, "");
+		// System.out.print(layout_x);
+		results_Text.setStyle("-fx-font: " + tSize + " arial;");
+		
 		EventHandler<ActionEvent> DFSevent = new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent e) {
 				// System.out.print("pressed");
@@ -258,6 +263,7 @@ public class Main extends Application {
 		pane.getChildren().add(BFS_button);
 		pane.getChildren().add(Astar_button);
 		pane.getChildren().add(Speed_Text);
+		pane.getChildren().add(results_Text);
 		pane.getChildren().add(increase_AnimationTime_button);
 		pane.getChildren().add(deacrease_AnimationTime_button);
 		Scene scene = new Scene(pane, maze.length * mazeScale, maze[0].length * (mazeScale / 2));
@@ -345,8 +351,12 @@ public class Main extends Application {
 		if (maze[root.y][root.x] == 3) {
 
 			long estimatedTime = System.nanoTime() - startTime;
-			System.out.println(String.format("DFS Reached exist in: %.2f seconds and taken: %d steps",
-					estimatedTime / 1e9, steps));
+			String resultString= String.format("DFS Reached exist in: %.2f seconds and taken: %d steps",
+					estimatedTime / 1e9, steps);
+			
+			results_Text.setText(results_Text.getText() + "\n" + resultString);
+			System.out.println(resultString);
+			
 			startTime = steps = 0;
 			goal = root;
 			return true;
@@ -390,8 +400,13 @@ public class Main extends Application {
 
 			if (maze[u.y][u.x] == 3) {
 				long estimatedTime = System.nanoTime() - startTime;
-				System.out.println(String.format("BFS Reached exist in: %.2f seconds and taken: %d steps",
-						estimatedTime / 1e9, steps));
+				
+				String resultString= String.format("BFS Reached exist in: %.2f seconds and taken: %d steps",
+						estimatedTime / 1e9, steps);
+		
+				results_Text.setText(results_Text.getText() + "\n" + resultString);
+				System.out.println(resultString);
+				
 				startTime = steps = 0;
 				goal = u;
 				return;
@@ -451,8 +466,12 @@ public class Main extends Application {
 
 			if (maze[u.y][u.x] == 3) {
 				long estimatedTime = System.nanoTime() - startTime;
-				System.out.println(String.format("A*  Reached exist in: %.2f seconds and taken: %d steps",
-						estimatedTime / 1e9, steps));
+				String resultString= String.format("A*  Reached exist in: %.2f seconds and taken: %d steps",
+						estimatedTime / 1e9, steps);
+				
+				results_Text.setText(results_Text.getText() + "\n" + resultString);
+				System.out.println(resultString);
+				
 				startTime = steps = 0;
 				goal = u;
 				return;
