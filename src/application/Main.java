@@ -37,9 +37,10 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 public class Main extends Application {
-
+	
+	long startTime = 0;
+	int steps;
 	static int[][] maze;
-
 	static Button DFS_button;
 	static Button BFS_button;
 	static Button Astar_button;
@@ -160,7 +161,7 @@ public class Main extends Application {
 		Astar_button.setFont(Font.font("Arial", 20));
 
 		Speed_Text = new Text(layout_x, layout_y * 0.24, "SPEED: " + (float) Animation_speed / 1000 + "s");
-		System.out.print(layout_x);
+		//System.out.print(layout_x);
 		int tSize = (26 * layout_x) / 861;
 		Speed_Text.setStyle("-fx-font: " + tSize + " arial;");
 
@@ -181,8 +182,9 @@ public class Main extends Application {
 				if (!mazeClean) {
 					timeline.stop();
 	            	timeline.getKeyFrames().clear();
-	            	cleanMaze();}
-
+	            	cleanMaze();
+	            	}
+				
 				DFS(root);
             	timeline.playFromStart();
 				dealyAnimation = 100;
@@ -320,8 +322,14 @@ public class Main extends Application {
 
 	}
 
-	static boolean DFS(Node root) {
-
+	boolean DFS(Node root) {
+		if (startTime==0) {
+			 startTime = System.nanoTime();
+			 steps = 0;
+		}
+		else
+			steps++;
+		
 		if (root == null)
 			return false;
 
@@ -333,7 +341,10 @@ public class Main extends Application {
 
 		if (maze[root.y][root.x] == 3) {
 
-			System.out.println("Reached");
+			long estimatedTime = System.nanoTime() - startTime;
+			System.out.println("DFS Reached exist in (nanoseconds)"+ estimatedTime
+			+ " and taken " + steps + " steps");
+			startTime = steps = 0;
 			return true;
 		}
 
@@ -350,22 +361,16 @@ public class Main extends Application {
 		for (Edge e : root.adjacencies)
 			if(DFS(e.target))
 				return true;
-//		if (DFS(root.left))
-//			return true;
-//
-//		if (DFS(root.down))
-//			return true;
-//
-//		if (DFS(root.up))
-//			return true;
-//
-//		if (DFS(root.right))
-//			return true;
 
 		return false;
 	}
 
 	void BFS(Node root, int[][] mazeCopy) {
+		if (startTime==0) {
+			 startTime = System.nanoTime();
+			 steps = 0;
+		}
+		
 		Queue<Node> q = new LinkedList<Node>();
 		if (root != null)
 			q.add(root);
@@ -380,7 +385,10 @@ public class Main extends Application {
 				mazeCopy[u.y][u.x] = 4;
 
 			if (maze[u.y][u.x] == 3) {
-				System.out.println("Reached");
+				long estimatedTime = System.nanoTime() - startTime;
+				System.out.println("BFS Reached exist in (nanoseconds)"+ estimatedTime 
+						+ " and taken " + steps + " steps");
+				startTime = steps = 0;
 				return;
 			}
 
@@ -397,21 +405,17 @@ public class Main extends Application {
 			
 			for (Edge e : u.adjacencies)
 				q.add(e.target);
-//			if (u.left != null)
-//				q.add(u.left);
-//			if (u.down != null)
-//				q.add(u.down);
-//			if (u.up != null)
-//				q.add(u.up);
-//			if (u.right != null)
-//				q.add(u.right);
+			
+			steps++;			
 		}
 
 		return;
 	}
 
 	void Astar(Node root, int[][] mazeCopy) {
-
+		if (startTime==0)
+			 startTime = System.nanoTime();
+		
 		PriorityQueue<Node> q = new PriorityQueue<Node>(20, new Comparator<Node>() {
 			// override compare method
 			public int compare(Node i, Node j) {
@@ -433,7 +437,6 @@ public class Main extends Application {
 			q.add(root);
 
 		while (!q.isEmpty()) {
-
 			Node u = q.remove();
 
 			if (mazeCopy[u.y][u.x] == 4)// 4 already Visited
@@ -442,7 +445,10 @@ public class Main extends Application {
 				mazeCopy[u.y][u.x] = 4;
 
 			if (maze[u.y][u.x] == 3) {
-				System.out.println("Reached");
+				long estimatedTime = System.nanoTime() - startTime;
+				System.out.println("A* Reached exist in (nanoseconds)"+ estimatedTime 
+						+ " and taken " + steps + " steps");
+				startTime = steps = 0;
 				return;
 			}
 
@@ -461,8 +467,8 @@ public class Main extends Application {
 				//e.target.setParent(root);
 				q.add(e.target);
 				}
+			steps++;
 		}
-
 		return;
 	}
 
