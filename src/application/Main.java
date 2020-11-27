@@ -412,11 +412,11 @@ public class Main extends Application {
 		PriorityQueue<Node> q = new PriorityQueue<Node>(20, new Comparator<Node>() {
 			// override compare method
 			public int compare(Node i, Node j) {
-				if (i.f_scores > j.f_scores) {
+				if (i.getF() > j.getF()) {
 					return 1;
 				}
 
-				else if (i.f_scores < j.f_scores) {
+				else if (i.getF() < j.getF()) {
 					return -1;
 				}
 
@@ -467,7 +467,6 @@ public class Main extends Application {
 		if (root == null)
 			return;
 
-		root.setF_scores(Point2D.distance(root.x, root.y, goal.x, goal.y));
 
 		// left
 		if (root.x - 1 != -1 && copied_maze[root.y][root.x - 1] != 1) {
@@ -509,7 +508,6 @@ public class Main extends Application {
 
 		while (!q.isEmpty()) {
 			Node u = q.remove();
-			u.setF_scores(Point2D.distance(u.x, u.y, goal.x, goal.y));
 
 			// left
 			if (u.x - 1 != -1 && copied_maze[u.y][u.x - 1] != 1) {
@@ -548,6 +546,10 @@ public class Main extends Application {
 				if (maze[r][c] == 0)
 					rect[r][c].setFill(Color.WHITE);
 	}
+	
+	static Node getGoal() {
+		return goal;
+	}
 
 	void fillpath(List<Node> path) {
 		Iterator<Node> crunchifyIterator = path.iterator();
@@ -573,7 +575,7 @@ public class Main extends Application {
 
 		for (Node node = target; node != null; node = node.parent) {
 			path.add(node);
-			System.out.print(String.format("[%d, %d](%.2f), ", node.x, node.y,node.f_scores));
+			//System.out.print(String.format("[%d, %d](%.2f), ", node.x, node.y,node.getF()));
 		}
 		Collections.reverse(path);
 
