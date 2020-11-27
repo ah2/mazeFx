@@ -22,8 +22,12 @@ public class Node {
 		this.parent = parent;
 	}
 	
-	void setf_scores(double f_scores) {
+	void setF_scores(double f_scores) {
 		this.f_scores = f_scores;
+	}
+
+	void setH_scores(double h_scores) {
+		this.h_scores = h_scores;
 	}
 
 	Node(int y, int x) {
