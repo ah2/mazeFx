@@ -59,14 +59,11 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage primaryStage) {
-		
 
 		try {
-			//String filename = "openMazeL.png";
-			//File image = new File("mazes/" + filename);
 			
 			BufferedImage mazeimg = ImageIO.read(mazeFile);
-			System.out.println("Successfully read maze!");
+			//System.out.println("Successfully read maze!");
 			int[][] mazearr = Maze2DArr(mazeimg);
 			// printMazearr(mazearr);
 			maze = mazearr;
@@ -173,6 +170,7 @@ public class Main extends Application {
 		deacrease_AnimationTime_button.setMinWidth(layout_x / 5);
 		deacrease_AnimationTime_button.setMinHeight(layout_y * 0.05);
 		deacrease_AnimationTime_button.setFont(Font.font("Arial", 20));
+		
 		EventHandler<ActionEvent> DFSevent = new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent e) {
 				// System.out.print("pressed");
@@ -266,9 +264,11 @@ public class Main extends Application {
 
 		scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 		primaryStage.setScene(scene);
+		//Scene.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		primaryStage.show();
 
 	}
+
 
 	public static int[][] Maze2DArr(BufferedImage mazefile) {
 		int height = mazefile.getHeight();
@@ -425,11 +425,11 @@ public class Main extends Application {
 			// override compare method
 			public int compare(Node i, Node j) {
 				if (i.getF() > j.getF()) {
-					return 1;
+					return -1;
 				}
 
 				else if (i.getF() < j.getF()) {
-					return -1;
+					return 1;
 				}
 
 				else {
